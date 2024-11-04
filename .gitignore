@@ -17,7 +17,7 @@
 /versioned/
 Gemfile.lock
 archive.json
-draft-kleidl-digest-fields-problem-types.xml
+draft-ietf-httpapi-digest-fields-problem-types.xml
 package-lock.json
 report.xml
 !requirements.txt

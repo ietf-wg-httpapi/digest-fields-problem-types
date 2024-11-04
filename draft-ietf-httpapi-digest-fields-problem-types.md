@@ -2,7 +2,7 @@
 title: "HTTP Problem Types for Digest Fields"
 category: info
 
-docname: draft-kleidl-digest-fields-problem-types-latest
+docname: draft-ietf-httpapi-digest-fields-problem-types-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
@@ -19,8 +19,8 @@ venue:
 #  type: Working Group
 #  mail: WG@example.com
 #  arch: https://example.com/WG
-  github: "tus/draft-digest-fields-problem-types"
-  latest: "https://tus.github.io/draft-digest-fields-problem-types/draft-kleidl-digest-fields-problem-types.html"
+  github: "ietf-wg-httpapi/digest-fields-problem-types"
+  latest: "https://ietf-wg-httpapi.github.io/digest-fields-problem-types/draft-ietf-httpapi-digest-fields-problem-types.html"
 
 author:
  -
