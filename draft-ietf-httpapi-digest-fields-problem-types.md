@@ -8,8 +8,8 @@ number:
 date:
 consensus: true
 v: 3
-area: WIT
-# workgroup: WG Working Group
+area: "Web and Internet Transport"
+workgroup: "Building Blocks for HTTP APIs"
 keyword:
  - next generation
  - unicorn
