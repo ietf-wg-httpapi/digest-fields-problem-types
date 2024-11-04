@@ -8,17 +8,17 @@ number:
 date:
 consensus: true
 v: 3
-# area: AREA
+area: WIT
 # workgroup: WG Working Group
 keyword:
  - next generation
  - unicorn
  - sparkling distributed ledger
 venue:
-#  group: WG
-#  type: Working Group
-#  mail: WG@example.com
-#  arch: https://example.com/WG
+  group: "Building Blocks for HTTP APIs"
+  type: "Working Group"
+  mail: "httpapi@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/httpapi/"
   github: "ietf-wg-httpapi/digest-fields-problem-types"
   latest: "https://ietf-wg-httpapi.github.io/digest-fields-problem-types/draft-ietf-httpapi-digest-fields-problem-types.html"
 
