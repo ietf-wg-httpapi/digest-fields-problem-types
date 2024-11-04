@@ -1,11 +1,11 @@
 # HTTP Problem Types for Digest Fields
 
-This is the working area for the individual Internet-Draft, "HTTP Problem Types for Digest Fields".
+This is the working area for the IETF [HTTPAPI Working Group](https://datatracker.ietf.org/wg/httpapi/documents/) Internet-Draft, "HTTP Problem Types for Digest Fields".
 
 * [Editor's Copy](https://ietf-wg-httpapi.github.io/digest-fields-problem-types/#go.draft-ietf-httpapi-digest-fields-problem-types.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-httpapi-digest-fields-problem-types)
-* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-digest-fields-problem-types)
-* [Compare Editor's Copy to Individual Draft](https://ietf-wg-httpapi.github.io/digest-fields-problem-types/#go.draft-ietf-httpapi-digest-fields-problem-types.diff)
+* [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-digest-fields-problem-types)
+* [Compare Editor's Copy to Working Group Draft](https://ietf-wg-httpapi.github.io/digest-fields-problem-types/#go.draft-ietf-httpapi-digest-fields-problem-types.diff)
 
 
 ## Contributing
