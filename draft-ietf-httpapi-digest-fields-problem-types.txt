@@ -1,0 +1,387 @@
+
+
+
+
+Building Blocks for HTTP APIs                                  M. Kleidl
+Internet-Draft                                               Transloadit
+Intended status: Informational                                 L. Pardue
+Expires: 8 May 2025                                           Cloudflare
+                                                                R. Polli
+                                                                 Par-Tec
+                                                         4 November 2024
+
+
+                  HTTP Problem Types for Digest Fields
+         draft-ietf-httpapi-digest-fields-problem-types-latest
+
+Abstract
+
+   This document specifies problem types that servers can use in
+   responses to problems encountered while dealing with a request
+   carrying integrity fields and integrity preference fields.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at https://ietf-wg-
+   httpapi.github.io/digest-fields-problem-types/draft-ietf-httpapi-
+   digest-fields-problem-types.html.  Status information for this
+   document may be found at https://datatracker.ietf.org/doc/draft-ietf-
+   httpapi-digest-fields-problem-types/.
+
+   Discussion of this document takes place on the Building Blocks for
+   HTTP APIs Working Group mailing list (mailto:httpapi@ietf.org), which
+   is archived at https://mailarchive.ietf.org/arch/browse/httpapi/.
+   Subscribe at https://www.ietf.org/mailman/listinfo/httpapi/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/ietf-wg-httpapi/digest-fields-problem-types.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 8 May 2025.
+
+Copyright Notice
+
+   Copyright (c) 2024 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Definitions
+   3.  Problem Types
+     3.1.  Unsupported Hashing Algorithm
+     3.2.  Invalid Digest Value
+     3.3.  Mismatching Digest Value
+   4.  Security Considerations
+   5.  IANA Considerations
+     5.1.  Registration of "digest-unsupported-algorithm" Problem Type
+     5.2.  Registration of "digest-invalid-value" Problem Type
+     5.3.  Registration of "digest-mismatching-value" Problem Type
+   6.  Normative References
+   Authors' Addresses
+
+1.  Introduction
+
+   [DIGEST] by design does not define, require or recommend any specific
+   behavior for error handling relating to integrity.  The
+   responsibility is instead delegated to applications.  This draft
+   defines a set of problem types ([PROBLEM]) that can be used by server
+   applications to indicate that a problem was encountered while dealing
+   with a request carrying integrity fields and integrity preference
+   fields.
+
+   For example, a request message may include content alongside Content-
+   Digest and Repr-Digest fields that use a digest algorithm the server
+   does not support.  An application could decide to reject this request
+   because it cannot validate the integrity.  Using a problem type, the
+   server can provide machine-readable error details to aid debugging or
+   error reporting, as shown in the following example.
+
+   HTTP/1.1 400 Bad Request
+   Content-Type: application/problem+json
+   Want-Content-Digest: sha-512=3, sha-256=10
+
+   {
+     "type": "https://iana.org/assignments/http-problem-types#digest-unsupported-algorithm",
+     "title": "hashing algorithm is not supported",
+     "unsupported-algorithm": "foo"
+   }
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+   The terms "integrity fields" and "integrity preference fields" in
+   this document are to be interpreted as described in [DIGEST].
+
+   The term "problem type" in this document is to be interpreted as
+   described in [PROBLEM].
+
+   The term "request", "response", "intermediary", "sender", and
+   "server" are from [HTTP].
+
+3.  Problem Types
+
+3.1.  Unsupported Hashing Algorithm
+
+   This section defines the "https://iana.org/assignments/http-problem-
+   types#digest-unsupported-algorithm" problem type.  A server MAY use
+   this problem type if it wants to communicate to the client that one
+   of the hashing algorithms referenced in the integrity or integrity
+   preference fields present in the request is not supported.
+
+   For this problem type, unsupported-algorithm is defined as the only
+   extension member.  It SHOULD be populated in a response using this
+   problem type, with its value being the algorithm key of the
+   unsupported algorithm from the request.  The response can include the
+   corresponding integrity preference field to indicate the server's
+   algorithm support and preference.
+
+   Example:
+
+   POST /books HTTP/1.1
+   Host: foo.example
+   Content-Type: application/json
+   Accept: application/json
+   Accept-Encoding: identity
+   Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
+
+   {"title": "New Title"}
+
+      Figure 1: A request with a sha-256 integrity field, which is not
+                          supported by the server
+
+   HTTP/1.1 400 Bad Request
+   Content-Type: application/problem+json
+   Want-Repr-Digest: sha-512=10, sha-256=0
+
+   {
+     "type": "https://iana.org/assignments/http-problem-types#digest-unsupported-algorithm",
+     "title": "Unsupported hashing algorithm",
+     "unsupported-algorithm": "sha-256"
+   }
+
+          Figure 2: Response Advertising the Supported Algorithms
+
+   This problem type is a hint to the client about algorithm support,
+   which the client could use to retry the request with a different,
+   supported, algorithm.  Note that a request may contain more than one
+   integrity field.
+
+   This problem type can also be used when a request contains an
+   integrity preference field.  For example:
+
+   GET /items/123 HTTP/1.1
+   Host: foo.example
+   Want-Repr-Digest: sha=10
+
+                Figure 3: GET Request with Want-Repr-Digest
+
+   HTTP/1.1 400 Bad Request
+   Content-Type: application/problem+json
+
+   {
+     "type": "https://iana.org/assignments/http-problem-types#digest-unsupported-algorithm",
+     "title": "Unsupported hashing algorithm",
+     "unsupported-algorithm": "sha"
+   }
+
+          Figure 4: Response Advertising the Supported Algorithms
+
+3.2.  Invalid Digest Value
+
+   This section defines the "https://iana.org/assignments/http-problem-
+   types#digest-invalid-value" problem type.  A server MAY use this
+   problem type when responding to a request, whose integrity fields
+   include a digest value, that cannot be generated by the corresponding
+   hashing algorithm.  For example, if the digest value of the sha-512
+   hashing algorithm is not 64 bytes long, it cannot be a valid digest
+   value and the server can skip computing the digest value.  This
+   problem type MUST NOT be used if the server is not able to parse the
+   integrity fields according to Section 4.5 of [STRUCTURED-FIELDS], for
+   example because of a syntax error in the field value.
+
+   The server SHOULD include a human-readable description why the value
+   is considered invalid in the title member.
+
+   The following example shows a request with the content {"hello":
+   "world"} (plus LF), but the digest has been truncated.  The
+   subsequent response indicates the invalid SHA-512 digest.
+
+   PUT /items/123 HTTP/1.1
+   Host: foo.example
+   Content-Type: application/json
+   Repr-Digest: sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4:
+
+   {"hello": "world"}
+
+      Figure 5: A request with a sha-512 integrity field, whose digest
+                             has been truncated
+
+   HTTP/1.1 400 Bad Request
+   Content-Type: application/problem+json
+
+   {
+     "type": "https://iana.org/assignments/http-problem-types#digest-invalid-value",
+     "title": "digest value for sha-512 is not 64 bytes long"
+   }
+
+    Figure 6: Response indicating that the provided digest is too short
+
+   This problem type indicates a fault in the sender's calculation or
+   encoding of the digest value.  A retry of the same request without
+   modification will likely not yield a successful response.
+
+3.3.  Mismatching Digest Value
+
+   This section defines the "https://iana.org/assignments/http-problem-
+   types#digest-mismatching-value" problem type.  A server MAY use this
+   problem type when responding to a request, whose integrity fields
+   include a digest value that does not match the digest value that the
+   server calculated for the request content or representation.
+
+   Three problem type extension members are defined: the algorithm,
+   provided-digest, and calculated-digest members.  A response using
+   this problem type SHOULD populate all members, with the value of
+   algorithm being the algorithm key of the used hashing algorithm, with
+   the value of provided-digest being the digest value taken from the
+   request's integrity fields, and the value of calculated-digest being
+   the calculated digest.  The digest values MUST BE serialized as byte
+   sequences as described in Section 4.1.8 of [STRUCTURED-FIELDS].
+
+   The following example shows a request with the content {"hello":
+   "woXYZ"} (plus LF), but the representation digest for {"hello":
+   "world"} (plus LF).  The subsequent response indicates the
+   mismatching SHA-256 digest values.
+
+   PUT /items/123 HTTP/1.1
+   Host: foo.example
+   Content-Type: application/json
+   Repr-Digest: sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
+
+   {"hello": "woXYZ"}
+
+       Figure 7: A request with a sha-256 integrity field, which does
+                        not match the representation
+
+   HTTP/1.1 400 Bad Request
+   Content-Type: application/problem+json
+
+   {
+     "type": "https://iana.org/assignments/http-problem-types#digest-mismatching-value",
+     "title": "digest value fromr request does not match expected value",
+     "algorithm": "sha-256",
+     "provided-digest": ":RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:",
+     "calculated-digest": ":8vXo+0QVwf2woEblm4hTAftp0/K5fWSMZG4CKtplwjc=:"
+   }
+
+           Figure 8: Response indicating the mismatching digests
+
+   If the sender receives this problem type, the request might be
+   modified unintentionally by an intermediary.  The sender could use
+   this information to retry the request without modification to address
+   temporary transmission issues.
+
+4.  Security Considerations
+
+   Disclosing error details could leak information such as the presence
+   of intermediaries or the server's implementation details.  Moreover,
+   they can be used to fingerprint the server.
+
+   To mitigate these risks, a server could assess the risk of disclosing
+   error details and prefer a general problem type over a more specific
+   one.
+
+5.  IANA Considerations
+
+   IANA is asked to register the following entries in the "HTTP Problem
+   Types" registry at https://www.iana.org/assignments/http-problem-
+   types (https://www.iana.org/assignments/http-problem-types).
+
+5.1.  Registration of "digest-unsupported-algorithm" Problem Type
+
+   Type URI:  https://iana.org/assignments/http-problem-types#digest-
+      unsupported-algorithm
+
+   Title:  Unsupported Hashing Algorithm
+
+   Recommended HTTP status code:  400
+
+   Reference:  Section 3.1 of this document
+
+5.2.  Registration of "digest-invalid-value" Problem Type
+
+   Type URI:  https://iana.org/assignments/http-problem-types#digest-
+      invalid-value
+
+   Title:  Invalid Digest Value
+
+   Recommended HTTP status code:  400
+
+   Reference:  Section 3.2 of this document
+
+5.3.  Registration of "digest-mismatching-value" Problem Type
+
+   Type URI:  https://iana.org/assignments/http-problem-types#digest-
+      mismatching-value
+
+   Title:  Mismatching Digest Value
+
+   Recommended HTTP status code:  400
+
+   Reference:  Section 3.3 of this document
+
+6.  Normative References
+
+   [DIGEST]   Polli, R. and L. Pardue, "Digest Fields", RFC 9530,
+              DOI 10.17487/RFC9530, February 2024,
+              <https://www.rfc-editor.org/rfc/rfc9530>.
+
+   [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., "HTTP Semantics", STD 97, RFC 9110,
+              DOI 10.17487/RFC9110, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9110>.
+
+   [PROBLEM]  Nottingham, M., Wilde, E., and S. Dalal, "Problem Details
+              for HTTP APIs", RFC 9457, DOI 10.17487/RFC9457, July 2023,
+              <https://www.rfc-editor.org/rfc/rfc9457>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [STRUCTURED-FIELDS]
+              Nottingham, M. and P. Kamp, "Structured Field Values for
+              HTTP", RFC 8941, DOI 10.17487/RFC8941, February 2021,
+              <https://www.rfc-editor.org/rfc/rfc8941>.
+
+Authors' Addresses
+
+   Marius Kleidl
+   Transloadit
+   Email: marius@transloadit.com
+
+
+   Lucas Pardue
+   Cloudflare
+   Email: lucas@lucaspardue.com
+
+
+   Roberto Polli
+   Par-Tec
+   Italy
+   Email: robipolli@gmail.com
