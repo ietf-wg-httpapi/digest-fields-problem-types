@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-05T00:40:31.392243+00:00",
+  "timestamp": "2024-11-07T00:40:26.320928+00:00",
   "repo": "ietf-wg-httpapi/digest-fields-problem-types",
   "labels": [
     {
@@ -14,6 +14,47 @@
       "color": "e4e669"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDONJ2BSc6dQHcH",
+      "title": "Guidance for adding more digest-specific problem types",
+      "url": "https://github.com/ietf-wg-httpapi/digest-fields-problem-types/issues/1",
+      "state": "OPEN",
+      "author": "ioggstream",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "## I Expect\r\n\r\n- guidance to extend this document with more digest-specific problem types (e.g., `digest-` prefix?)",
+      "createdAt": "2024-11-06T14:28:22Z",
+      "updatedAt": "2024-11-06T14:31:47Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ioggstream",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "cc: @sdatgit",
+          "createdAt": "2024-11-06T14:31:45Z",
+          "updatedAt": "2024-11-06T14:31:45Z"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "id": "I_kwDONJ2BSc6dQtGF",
+      "title": "Interactions with Signatures problem types",
+      "url": "https://github.com/ietf-wg-httpapi/digest-fields-problem-types/issues/2",
+      "state": "OPEN",
+      "author": "ioggstream",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "## Question\r\n\r\n- should this I-D mention signature problem types?",
+      "createdAt": "2024-11-06T15:18:14Z",
+      "updatedAt": "2024-11-06T15:18:14Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
   "pulls": []
 }
