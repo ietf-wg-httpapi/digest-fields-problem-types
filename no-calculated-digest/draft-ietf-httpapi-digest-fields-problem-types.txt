@@ -5,10 +5,10 @@
 Building Blocks for HTTP APIs                                  M. Kleidl
 Internet-Draft                                               Transloadit
 Intended status: Informational                                 L. Pardue
-Expires: 8 May 2025                                           Cloudflare
+Expires: 19 September 2025                                    Cloudflare
                                                                 R. Polli
                                                                  Par-Tec
-                                                         4 November 2024
+                                                           18 March 2025
 
 
                   HTTP Problem Types for Digest Fields
@@ -53,11 +53,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 May 2025.
+   This Internet-Draft will expire on 19 September 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -249,14 +249,13 @@ Table of Contents
    include a digest value that does not match the digest value that the
    server calculated for the request content or representation.
 
-   Three problem type extension members are defined: the algorithm,
-   provided-digest, and calculated-digest members.  A response using
-   this problem type SHOULD populate all members, with the value of
-   algorithm being the algorithm key of the used hashing algorithm, with
-   the value of provided-digest being the digest value taken from the
-   request's integrity fields, and the value of calculated-digest being
-   the calculated digest.  The digest values MUST BE serialized as byte
-   sequences as described in Section 4.1.8 of [STRUCTURED-FIELDS].
+   Two problem type extension members are defined: the algorithm and
+   provided-digest members.  A response using this problem type SHOULD
+   populate all members, with the value of algorithm being the algorithm
+   key of the used hashing algorithm and the value of provided-digest
+   being the digest value taken from the request's integrity fields.
+   The digest value MUST be serialized as byte sequences as described in
+   Section 4.1.8 of [STRUCTURED-FIELDS].
 
    The following example shows a request with the content {"hello":
    "woXYZ"} (plus LF), but the representation digest for {"hello":
@@ -278,10 +277,9 @@ Table of Contents
 
    {
      "type": "https://iana.org/assignments/http-problem-types#digest-mismatching-value",
-     "title": "digest value fromr request does not match expected value",
+     "title": "digest value from request does not match expected value",
      "algorithm": "sha-256",
-     "provided-digest": ":RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:",
-     "calculated-digest": ":8vXo+0QVwf2woEblm4hTAftp0/K5fWSMZG4CKtplwjc=:"
+     "provided-digest": ":RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:"
    }
 
            Figure 8: Response indicating the mismatching digests
