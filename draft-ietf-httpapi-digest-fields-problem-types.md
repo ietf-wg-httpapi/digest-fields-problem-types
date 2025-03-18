@@ -184,7 +184,7 @@ This problem type indicates a fault in the sender's calculation or encoding of t
 
 This section defines the "https://iana.org/assignments/http-problem-types#digest-mismatching-value" problem type. A server MAY use this problem type when responding to a request, whose integrity fields include a digest value that does not match the digest value that the server calculated for the request content or representation.
 
-Three problem type extension members are defined: the `algorithm`, `provided-digest`, and `calculated-digest` members. A response using this problem type SHOULD populate all members, with the value of `algorithm` being the algorithm key of the used hashing algorithm, with the value of `provided-digest` being the digest value taken from the request's integrity fields, and the value of `calculated-digest` being the calculated digest. The digest values MUST BE serialized as byte sequences as described in {{Section 4.1.8 of STRUCTURED-FIELDS}}.
+Two problem type extension members are defined: the `algorithm` and `provided-digest` members. A response using this problem type SHOULD populate all members, with the value of `algorithm` being the algorithm key of the used hashing algorithm and the value of `provided-digest` being the digest value taken from the request's integrity fields. The digest value MUST be serialized as byte sequences as described in {{Section 4.1.8 of STRUCTURED-FIELDS}}.
 
 The following example shows a request with the content `{"hello": "woXYZ"}` (plus LF), but the representation digest for `{"hello": "world"}` (plus LF). The subsequent response indicates the mismatching SHA-256 digest values.
 
@@ -206,8 +206,7 @@ Content-Type: application/problem+json
   "type": "https://iana.org/assignments/http-problem-types#digest-mismatching-value",
   "title": "digest value from request does not match expected value",
   "algorithm": "sha-256",
-  "provided-digest": ":RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:",
-  "calculated-digest": ":8vXo+0QVwf2woEblm4hTAftp0/K5fWSMZG4CKtplwjc=:"
+  "provided-digest": ":RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:"
 }
 ~~~
 {: title="Response indicating the mismatching digests"}
