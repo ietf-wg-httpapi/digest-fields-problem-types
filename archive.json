@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-03-18T00:43:34.673111+00:00",
+  "timestamp": "2025-03-20T00:43:04.732746+00:00",
   "repo": "ietf-wg-httpapi/digest-fields-problem-types",
   "labels": [
     {
@@ -69,7 +69,83 @@
           "updatedAt": "2024-11-12T16:31:18Z"
         }
       ]
+    },
+    {
+      "number": 3,
+      "id": "I_kwDONJ2BSc6ummO9",
+      "title": "Should responses include calculated digest?",
+      "url": "https://github.com/ietf-wg-httpapi/digest-fields-problem-types/issues/3",
+      "state": "CLOSED",
+      "author": "Acconut",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The current draft recommends server to include the expected digest value in an error response when the digest provided by the client doesn't match the server's expectation. This opens the door to potential information leakage and oracle attacks, which potentially allows an attacker to learn about the data over which the digest was computed.\n\nShould we remove this recommendation to include the digest calculated by the server?\n\nIs there a good way to get an expert's opinion in this topic? Maybe through a secdir early review?",
+      "createdAt": "2025-03-18T17:46:38Z",
+      "updatedAt": "2025-03-19T09:34:46Z",
+      "closedAt": "2025-03-19T09:34:46Z",
+      "comments": [
+        {
+          "author": "richsalz",
+          "authorAssociation": "NONE",
+          "body": "Yes, we can asks for a secdir review.  But I've been involved with the SEC area stuff and yes, saying \"nope this is the value\" is not a good idea.",
+          "createdAt": "2025-03-18T18:02:04Z",
+          "updatedAt": "2025-03-18T18:02:04Z"
+        },
+        {
+          "author": "Acconut",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks for the early feedback. It makes sense to be more cautious here, so I have opened https://github.com/ietf-wg-httpapi/digest-fields-problem-types/pull/4 to remove the calculated digest from the problem type.",
+          "createdAt": "2025-03-18T19:07:01Z",
+          "updatedAt": "2025-03-18T19:07:01Z"
+        }
+      ]
     }
   ],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 4,
+      "id": "PR_kwDONJ2BSc6PKZ8h",
+      "title": "Do not include calculated digest in problem",
+      "url": "https://github.com/ietf-wg-httpapi/digest-fields-problem-types/pull/4",
+      "state": "MERGED",
+      "author": "Acconut",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [
+        "Acconut"
+      ],
+      "labels": [],
+      "body": "Closes https://github.com/ietf-wg-httpapi/digest-fields-problem-types/issues/3.",
+      "createdAt": "2025-03-18T19:05:42Z",
+      "updatedAt": "2025-03-19T09:34:45Z",
+      "baseRepository": "ietf-wg-httpapi/digest-fields-problem-types",
+      "baseRefName": "main",
+      "baseRefOid": "5113d08b7dd4df7eacb48dda7fc2470ba3caf9de",
+      "headRepository": "ietf-wg-httpapi/digest-fields-problem-types",
+      "headRefName": "no-calculated-digest",
+      "headRefOid": "9c68fa98f19abe7892f737213ef83ecb66dad0b2",
+      "closedAt": "2025-03-19T09:34:45Z",
+      "mergedAt": "2025-03-19T09:34:45Z",
+      "mergedBy": "Acconut",
+      "mergeCommit": {
+        "oid": "3aff4c3f956834068f9878cae4e5cd554049621d"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDONJ2BSc6gvKKT",
+          "commit": {
+            "abbreviatedOid": "9c68fa9"
+          },
+          "author": "LPardue",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-03-19T02:08:44Z",
+          "updatedAt": "2025-03-19T02:08:44Z",
+          "comments": []
+        }
+      ]
+    }
+  ]
 }
