@@ -43,6 +43,7 @@ normative:
   PROBLEM: RFC9457
   STRUCTURED-FIELDS: RFC9651
   HTTP: RFC9110
+  RFC8792:
 
 informative:
 
@@ -60,12 +61,15 @@ This document specifies problem types that servers can use in responses to probl
 For example, a request message may include content alongside `Content-Digest` and `Repr-Digest` fields that use a digest algorithm the server does not support. An application could decide to reject this request because it cannot validate the integrity. Using a problem type, the server can provide machine-readable error details to aid debugging or error reporting, as shown in the following example.
 
 ~~~ http-message
+# NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
 Want-Content-Digest: sha-512=3, sha-256=10
 
 {
-  "type": "https://iana.org/assignments/http-problem-types#digest-unsupported-algorithm",
+  "type": "https://iana.org/assignments/http-problem-types#\
+    digest-unsupported-algorithm",
   "title": "hashing algorithm is not supported",
   "unsupported-algorithm": "foo"
 }
@@ -74,6 +78,8 @@ Want-Content-Digest: sha-512=3, sha-256=10
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
+
+Some examples in this document contain long lines that may be folded, as described in {{RFC8792}}.
 
 The terms "integrity fields" and "integrity preference fields" in this document are to be
 interpreted as described in {{DIGEST}}.
@@ -111,12 +117,15 @@ Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
 {: title="A request with a sha-256 integrity field, which is not supported by the server"}
 
 ~~~ http-message
+# NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
 Want-Repr-Digest: sha-512=10, sha-256=0
 
 {
-  "type": "https://iana.org/assignments/http-problem-types#digest-unsupported-algorithm",
+  "type": "https://iana.org/assignments/http-problem-types#\
+    digest-unsupported-algorithm",
   "title": "Unsupported hashing algorithm",
   "unsupported-algorithm": "sha-256"
 }
@@ -138,11 +147,14 @@ Want-Repr-Digest: sha=10
 {: title="GET Request with Want-Repr-Digest"}
 
 ~~~ http-message
+# NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
 
 {
-  "type": "https://iana.org/assignments/http-problem-types#digest-unsupported-algorithm",
+  "type": "https://iana.org/assignments/http-problem-types#\
+    digest-unsupported-algorithm",
   "title": "Unsupported hashing algorithm",
   "unsupported-algorithm": "sha"
 }
@@ -168,11 +180,14 @@ Repr-Digest: sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4:
 {: title="A request with a sha-512 integrity field, whose digest has been truncated"}
 
 ~~~ http-message
+# NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
 
 {
-  "type": "https://iana.org/assignments/http-problem-types#digest-invalid-value",
+  "type": "https://iana.org/assignments/http-problem-types#\
+    digest-invalid-value",
   "title": "digest value for sha-512 is not 64 bytes long"
 }
 ~~~
@@ -199,11 +214,14 @@ Repr-Digest: sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
 {: title="A request with a sha-256 integrity field, which does not match the representation"}
 
 ~~~ http-message
+# NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
 
 {
-  "type": "https://iana.org/assignments/http-problem-types#digest-mismatching-value",
+  "type": "https://iana.org/assignments/http-problem-types#\
+    digest-mismatching-value",
   "title": "digest value from request does not match expected value",
   "algorithm": "sha-256",
   "provided-digest": ":RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:"
