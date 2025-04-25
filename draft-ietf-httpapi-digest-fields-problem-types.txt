@@ -77,12 +77,13 @@ Table of Contents
      3.1.  Unsupported Hashing Algorithm
      3.2.  Invalid Digest Value
      3.3.  Mismatching Digest Value
-   4.  Security Considerations
-   5.  IANA Considerations
-     5.1.  Registration of "digest-unsupported-algorithm" Problem Type
-     5.2.  Registration of "digest-invalid-value" Problem Type
-     5.3.  Registration of "digest-mismatching-value" Problem Type
-   6.  Normative References
+   4.  Identifying Problem Causing Headers
+   5.  Security Considerations
+   6.  IANA Considerations
+     6.1.  Registration of "digest-unsupported-algorithm" Problem Type
+     6.2.  Registration of "digest-invalid-value" Problem Type
+     6.3.  Registration of "digest-mismatching-value" Problem Type
+   7.  Normative References
    Authors' Addresses
 
 1.  Introduction
@@ -113,7 +114,8 @@ Table of Contents
      "type": "https://iana.org/assignments/http-problem-types#\
        digest-unsupported-algorithm",
      "title": "hashing algorithm is not supported",
-     "unsupported-algorithm": "foo"
+     "unsupported-algorithm": "foo",
+     "header": "Wand-Content-Digest"
    }
 
 2.  Conventions and Definitions
@@ -146,19 +148,21 @@ Table of Contents
    of the hashing algorithms referenced in the integrity or integrity
    preference fields present in the request is not supported.
 
-   For this problem type, unsupported-algorithm is defined as the only
-   extension member.  It SHOULD be populated in a response using this
-   problem type, with its value being the algorithm key of the
-   unsupported algorithm from the request.  The response can include the
-   corresponding integrity preference field to indicate the server's
-   algorithm support and preference.
+   Two problem type extension members are defined, which SHOULD be
+   populated for all responses using this problem type:
+
+   *  The unsupported-algorithm extension member identifies the
+      unsupported algorithm from the request.  Its value is the
+      corresponding algorithm key.
+
+   *  The header extension member as defined in Section 4.
+
+   The response can include the corresponding integrity preference field
+   to indicate the server's algorithm support and preference.
 
    This problem type is a hint to the client about algorithm support,
    which the client could use to retry the request with a different,
    supported, algorithm.
-
-   Note that a request may contain more than one integrity fields or
-   integrity preference fields.
 
    Example:
 
@@ -184,7 +188,8 @@ Table of Contents
      "type": "https://iana.org/assignments/http-problem-types#\
        digest-unsupported-algorithm",
      "title": "Unsupported hashing algorithm",
-     "unsupported-algorithm": "sha-256"
+     "unsupported-algorithm": "sha-256",
+     "header": "Repr-Digest"
    }
 
        Figure 2: Response indicating the problem and advertising the
@@ -210,7 +215,8 @@ Table of Contents
      "type": "https://iana.org/assignments/http-problem-types#\
        digest-unsupported-algorithm",
      "title": "Unsupported hashing algorithm",
-     "unsupported-algorithm": "sha"
+     "unsupported-algorithm": "sha",
+     "header": "Want-Repr-Digest"
    }
 
        Figure 4: Response indicating the problem and advertising the
@@ -228,6 +234,11 @@ Table of Contents
    This problem type MUST NOT be used if the server is not able to parse
    the integrity fields according to Section 4.5 of [STRUCTURED-FIELDS],
    for example because of a syntax error in the field value.
+
+   One problem type extension member is defined, which SHOULD be
+   populated for all responses using this problem type:
+
+   *  The header extension member as defined in Section 4.
 
    The server SHOULD include a human-readable description why the value
    is considered invalid in the title member.
@@ -258,7 +269,8 @@ Table of Contents
    {
      "type": "https://iana.org/assignments/http-problem-types#\
        digest-invalid-value",
-     "title": "digest value for sha-512 is not 64 bytes long"
+     "title": "digest value for sha-512 is not 64 bytes long",
+     "header": "Repr-Digest"
    }
 
     Figure 6: Response indicating that the provided digest is too short
@@ -271,13 +283,18 @@ Table of Contents
    include a digest value that does not match the digest value that the
    server calculated for the request content or representation.
 
-   Two problem type extension members are defined: the algorithm and
-   provided-digest members.  A response using this problem type SHOULD
-   populate all members, with the value of algorithm being the algorithm
-   key of the used hashing algorithm and the value of provided-digest
-   being the digest value taken from the request's integrity fields.
-   The digest value is serialized as a byte sequence as described in
-   Section 4.1.8 of [STRUCTURED-FIELDS].
+   Three problem type extension members are defined, which SHOULD be
+   populated for all responses using this problem type:
+
+   *  The algorithm extension member is the algorithm key of the used
+      hashing algorithm.
+
+   *  The provided-digest extension member is the digest value taken
+      from the request's integrity fields.  The digest value is
+      serialized as a byte sequence as described in Section 4.1.8 of
+      [STRUCTURED-FIELDS].
+
+   *  The header extension member as defined in Section 4.
 
    The problem type intentionally does not include the digest value
    calculated by the server to avoid attackers abusing this information
@@ -313,12 +330,30 @@ Table of Contents
        digest-mismatching-value",
      "title": "digest value from request does not match expected value",
      "algorithm": "sha-256",
-     "provided-digest": ":RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:"
+     "provided-digest": ":RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:",
+     "header": "Repr-Digest"
    }
 
            Figure 8: Response indicating the mismatching digests
 
-4.  Security Considerations
+4.  Identifying Problem Causing Headers
+
+   Requests can include multiple integrity or integrity preference
+   fields.  For example, they may use the Content-Digest and Repr-Digest
+   fields simultaneously or express preferences for content and
+   representation digests at the same time.  To aid troubleshooting,
+   it's useful to identify the header field, whose value caused the
+   problem detailed in the response.  For this reason, the header
+   extension member is defined, which SHOULD be populated for all
+   responses using the problem types defined in this document.
+
+   The header extension member's value is the header field name that
+   caused the problem.  Since HTTP header field names are case-
+   insensitive and not all HTTP versions preserve their casing, the
+   casing of extension member's value might not match the request header
+   field name's casing.
+
+5.  Security Considerations
 
    Disclosing error details could leak information such as the presence
    of intermediaries or the server's implementation details.  Moreover,
@@ -332,13 +367,13 @@ Table of Contents
    should not expose the calculated digest to avoid exposing information
    that can be abused for oracle attacks.
 
-5.  IANA Considerations
+6.  IANA Considerations
 
    IANA is asked to register the following entries in the "HTTP Problem
    Types" registry at https://www.iana.org/assignments/http-problem-
    types (https://www.iana.org/assignments/http-problem-types).
 
-5.1.  Registration of "digest-unsupported-algorithm" Problem Type
+6.1.  Registration of "digest-unsupported-algorithm" Problem Type
 
    Type URI:  https://iana.org/assignments/http-problem-types#digest-
       unsupported-algorithm
@@ -349,7 +384,7 @@ Table of Contents
 
    Reference:  Section 3.1 of this document
 
-5.2.  Registration of "digest-invalid-value" Problem Type
+6.2.  Registration of "digest-invalid-value" Problem Type
 
    Type URI:  https://iana.org/assignments/http-problem-types#digest-
       invalid-value
@@ -360,7 +395,7 @@ Table of Contents
 
    Reference:  Section 3.2 of this document
 
-5.3.  Registration of "digest-mismatching-value" Problem Type
+6.3.  Registration of "digest-mismatching-value" Problem Type
 
    Type URI:  https://iana.org/assignments/http-problem-types#digest-
       mismatching-value
@@ -371,7 +406,7 @@ Table of Contents
 
    Reference:  Section 3.3 of this document
 
-6.  Normative References
+7.  Normative References
 
    [DIGEST]   Polli, R. and L. Pardue, "Digest Fields", RFC 9530,
               DOI 10.17487/RFC9530, February 2024,
