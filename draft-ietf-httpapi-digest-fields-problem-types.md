@@ -92,6 +92,8 @@ The terms "request", "response", "intermediary", "sender", and "server" are from
 
 # Problem Types
 
+The following section defines three problem types to express common problems that occur when handling integrity or integrity preference fields on the server. These problem types use the `digest-` prefix in their type URI. Other problem types that are defined outside this document, yet specific to digest related problems, may reuse this prefix.
+
 ## Unsupported Hashing Algorithm
 
 This section defines the "https://iana.org/assignments/http-problem-types#digest-unsupported-algorithm" problem type.
