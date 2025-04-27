@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-01T00:52:13.194721+00:00",
+  "timestamp": "2025-04-27T00:50:51.741517+00:00",
   "repo": "ietf-wg-httpapi/digest-fields-problem-types",
   "labels": [
     {
@@ -20,15 +20,15 @@
       "id": "I_kwDONJ2BSc6dQHcH",
       "title": "Guidance for adding more digest-specific problem types",
       "url": "https://github.com/ietf-wg-httpapi/digest-fields-problem-types/issues/1",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ioggstream",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "## I Expect\r\n\r\n- guidance to extend this document with more digest-specific problem types (e.g., `digest-` prefix?)",
       "createdAt": "2024-11-06T14:28:22Z",
-      "updatedAt": "2024-11-12T16:48:59Z",
-      "closedAt": null,
+      "updatedAt": "2025-04-25T09:36:05Z",
+      "closedAt": "2025-04-25T09:36:04Z",
       "comments": [
         {
           "author": "ioggstream",
@@ -51,15 +51,15 @@
       "id": "I_kwDONJ2BSc6dQtGF",
       "title": "Interactions with Signatures problem types",
       "url": "https://github.com/ietf-wg-httpapi/digest-fields-problem-types/issues/2",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ioggstream",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "## Question\r\n\r\n- should this I-D mention signature problem types?",
       "createdAt": "2024-11-06T15:18:14Z",
-      "updatedAt": "2024-11-12T16:31:19Z",
-      "closedAt": null,
+      "updatedAt": "2025-04-25T09:24:17Z",
+      "closedAt": "2025-04-25T09:24:17Z",
       "comments": [
         {
           "author": "Acconut",
@@ -67,6 +67,13 @@
           "body": "During the httpapi meeting at the IETF 121 there was interest in adding a limited number of problem types for signatures. Handling HTTP message signatures can fail due to various reason and we do not want to define a problem type for every scenario to avoid blowing up the draft. In addition, a server might not want to expose certain errors to the client.\r\n\r\nWe should explore if we can easily define a small set of problem types that work for signatures and digests.",
           "createdAt": "2024-11-12T16:31:18Z",
           "updatedAt": "2024-11-12T16:31:18Z"
+        },
+        {
+          "author": "Acconut",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This was discussed again at the IETF 122 meeting with the outcome to not include problem types for signatures in this document. It keeps the draft focused and concise, avoiding a situation where this document is dragged on for a long time. In addition, I'm not expert at HTTP signatures and could contribute little to designing corresponding problem types.\n\nThat being said, there was some interest in problem types for signatures. But maybe that's better reserved for a separate document.",
+          "createdAt": "2025-04-25T09:24:03Z",
+          "updatedAt": "2025-04-25T09:24:03Z"
         }
       ]
     },
