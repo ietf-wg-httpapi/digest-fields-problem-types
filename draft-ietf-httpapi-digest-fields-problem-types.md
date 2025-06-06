@@ -44,6 +44,7 @@ normative:
   STRUCTURED-FIELDS: RFC9651
   HTTP: RFC9110
   RFC8792:
+  JSON: RFC8259
 
 informative:
 
@@ -69,10 +70,14 @@ Want-Content-Digest: sha-512=3, sha-256=10
 
 {
   "type": "https://iana.org/assignments/http-problem-types#\
-    digest-unsupported-algorithm",
-  "title": "hashing algorithm is not supported",
-  "unsupported-algorithm": "foo",
-  "header": "Want-Content-Digest"
+    digest-unsupported-algorithms",
+  "title": "Unsupported hashing algorithms",
+  "unsupported-algorithms": [
+    {
+      "algorithm": "foo",
+      "header": "Want-Content-Digest"
+    }
+  ]
 }
 ~~~
 
@@ -90,25 +95,30 @@ interpreted as described in {{PROBLEM}}.
 
 The terms "request", "response", "intermediary", "sender", "client", and "server" are from {{HTTP}}.
 
+The problem types in this document are defined using JSON {{JSON}}. They can be serialized into an equivalent XML format as outlined in {{Appendix B of PROBLEM}}.
+
 # Problem Types
 
 The following section defines three problem types to express common problems that occur when handling integrity or integrity preference fields on the server. These problem types use the `digest-` prefix in their type URI. Other problem types that are defined outside this document, yet specific to digest related problems, may reuse this prefix.
 
-## Unsupported Hashing Algorithm
+Requests can include multiple integrity or integrity preference fields. For example, they may use the `Content-Digest` and `Repr-Digest` fields simultaneously or express preferences for content and representation digests at the same time. Therefore, similar problems can appear multiple times for one request. The problem types defined in this document allow expressing multiple appearances, while each time identifying the corresponding header that contained the problematic value.
 
-This section defines the "https://iana.org/assignments/http-problem-types#digest-unsupported-algorithm" problem type.
-A server MAY use this problem type if it wants to communicate to the client that
-one of the hashing algorithms referenced in the integrity or integrity preference fields present in the request
-is not supported.
+## Unsupported Hashing Algorithms
 
-Two problem type extension members are defined, which SHOULD be populated for all responses using this problem type:
+This section defines the "https://iana.org/assignments/http-problem-types#digest-unsupported-algorithms" problem type.
+A server can use this problem type to communicate to the client that
+one or more of the hashing algorithms referenced in the integrity or integrity preference fields present in the request
+are not supported.
 
-- The `unsupported-algorithm` extension member identifies the unsupported algorithm from the request. Its value is the corresponding algorithm key.
-- The `header` extension member as defined in {{identifying-problem-causing-headers}}.
+For this problem type, the `unsupported-algorithms` extension member is defined, whose value is a JSON {{JSON}} array of entries identifying each unsupported algorithm.
+Each entry in the array is a JSON object with the following members:
+
+- The `algorithm` member is a JSON string containing the algorithm key of the unsupported algorithm.
+- The `header` member is a JSON string containing the name of the integrity or integrity preference field that referenced the unsupported algorithm.
 
 The response can include the corresponding integrity preference field to indicate the server's algorithm support and preference.
 
-This problem type is a hint to the client about algorithm support, which the client could use to retry the request with a different, supported, algorithm.
+This problem type is a hint to the client about algorithm support, which the client could use to retry the request with different, supported, algorithms.
 
 Example:
 
@@ -119,10 +129,11 @@ Content-Type: application/json
 Accept: application/json
 Accept-Encoding: identity
 Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
+Content-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
 
 {"title": "New Title"}
 ~~~
-{: title="A request with a sha-256 integrity field, which is not supported by the server"}
+{: title="A request with sha-256 integrity fields, which are not supported by the server"}
 
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
@@ -130,13 +141,22 @@ Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
 Want-Repr-Digest: sha-512=10, sha-256=0
+Want-Content-Digest: sha-512=10, sha-256=0
 
 {
   "type": "https://iana.org/assignments/http-problem-types#\
-    digest-unsupported-algorithm",
-  "title": "Unsupported hashing algorithm",
-  "unsupported-algorithm": "sha-256",
-  "header": "Repr-Digest"
+    digest-unsupported-algorithms",
+  "title": "Unsupported hashing algorithms",
+  "unsupported-algorithms": [
+    {
+      "algorithm": "sha-256",
+      "header": "Repr-Digest"
+    },
+    {
+      "algorithm": "sha-256",
+      "header": "Content-Digest"
+    }
+  ]
 }
 ~~~
 {: title="Response indicating the problem and advertising the supported algorithms"}
@@ -159,23 +179,28 @@ Content-Type: application/problem+json
 
 {
   "type": "https://iana.org/assignments/http-problem-types#\
-    digest-unsupported-algorithm",
-  "title": "Unsupported hashing algorithm",
-  "unsupported-algorithm": "sha",
-  "header": "Want-Repr-Digest"
+    digest-unsupported-algorithms",
+  "title": "Unsupported hashing algorithms",
+  "unsupported-algorithms": [
+    {
+      "algorithm": "sha",
+      "header": "Want-Repr-Digest"
+    }
+  ]
 }
 ~~~
 {: title="Response indicating the problem and advertising the supported algorithms"}
 
-## Invalid Digest Value
+## Invalid Digest Values
 
-This section defines the "https://iana.org/assignments/http-problem-types#digest-invalid-value" problem type. A server MAY use this problem type when responding to a request, whose integrity fields include a digest value, that cannot be generated by the corresponding hashing algorithm. For example, if the digest value of the `sha-512` hashing algorithm is not 64 bytes long, it cannot be a valid SHA-512 digest value and the server can skip computing the digest value. This problem type MUST NOT be used if the server is not able to parse the integrity fields according to {{Section 4.5 of STRUCTURED-FIELDS}}, for example because of a syntax error in the field value.
+This section defines the "https://iana.org/assignments/http-problem-types#digest-invalid-values" problem type. A server can use this problem type when responding to a request, whose integrity fields include a digest value, that cannot be generated by the corresponding hashing algorithm. For example, if the digest value of the `sha-512` hashing algorithm is not 64 bytes long, it cannot be a valid SHA-512 digest value and the server can skip computing the digest value. This problem type MUST NOT be used if the server is not able to parse the integrity fields according to {{Section 4.5 of STRUCTURED-FIELDS}}, for example because of a syntax error in the field value.
 
-One problem type extension member is defined, which SHOULD be populated for all responses using this problem type:
+For this problem type, the `invalid-digests` extension member is defined, whose value is a JSON {{JSON}} array of entries identifying each invalid digest.
+Each entry in the array is a JSON object with the following members:
 
-- The `header` extension member as defined in {{identifying-problem-causing-headers}}.
-
-The server SHOULD include a human-readable description why the value is considered invalid in the `title` member.
+- The `algorithm` member is a JSON string containing the algorithm key.
+- The `header` member is a JSON string containing the name of the integrity field that contained the invalid digest value.
+- The `reason` member is a JSON string containing a human-readable description why the value is considered invalid.
 
 This problem type indicates a fault in the sender's calculation or encoding of the digest value. A retry of the same request without modification will likely not yield a successful response.
 
@@ -199,28 +224,35 @@ Content-Type: application/problem+json
 
 {
   "type": "https://iana.org/assignments/http-problem-types#\
-    digest-invalid-value",
-  "title": "digest value for sha-512 is not 64 bytes long",
-  "header": "Repr-Digest"
+    digest-invalid-values",
+  "title": "Invalid digest values",
+  "invalid-digests": [
+    {
+      "algorithm": "sha-512",
+      "header": "Repr-Digest",
+      "reason": "digest value is not 64 bytes long"
+    }
+  ]
 }
 ~~~
 {: title="Response indicating that the provided digest is too short"}
 
-## Mismatching Digest Value
+## Mismatching Digest Values
 
-This section defines the "https://iana.org/assignments/http-problem-types#digest-mismatching-value" problem type. A server MAY use this problem type when responding to a request, whose integrity fields include a digest value that does not match the digest value that the server calculated for the request content or representation.
+This section defines the "https://iana.org/assignments/http-problem-types#digest-mismatching-values" problem type. A server can use this problem type when responding to a request, whose integrity fields include a digest value that does not match the digest value that the server calculated for the request content or representation.
 
-Three problem type extension members are defined, which SHOULD be populated for all responses using this problem type:
+For this problem type, the `mismatching-digests` extension member is defined, whose value is a JSON {{JSON}} array of entries identifying each mismatching digest.
+Each entry in the array is a JSON object with the following members:
 
-- The `algorithm` extension member is the algorithm key of the used hashing algorithm.
-- The `provided-digest` extension member is the digest value taken from the request's integrity fields. The digest value is serialized as a byte sequence as described in {{Section 4.1.8 of STRUCTURED-FIELDS}}.
-- The `header` extension member as defined in {{identifying-problem-causing-headers}}.
+- The `algorithm` member is a JSON string containing the algorithm key of the hashing algorithm.
+- The `provided-digest` member is a JSON string containing the digest value taken from the request's integrity fields. The digest value is serialized as a byte sequence as described in {{Section 4.1.8 of STRUCTURED-FIELDS}}.
+- The `header` member is a JSON string containing the name of the integrity field that contained the mismatching digest value.
 
 The problem type intentionally does not include the digest value calculated by the server to avoid attackers abusing this information for oracle attacks.
 
 If the sender receives this problem type, the request might be modified unintentionally by an intermediary. The sender could use this information to retry the request without modification to address temporary transmission issues.
 
-The following example shows a request with the content `{"hello": "woXYZ"}` (plus LF), but the representation digest for `{"hello": "world"}` (plus LF). The subsequent response indicates the mismatching SHA-256 digest values.
+The following example shows a request with the content `{"hello": "woXYZ"}` (plus LF), but the representation digest for `{"hello": "world"}` (plus LF). The subsequent response indicates the mismatching SHA-256 digest value.
 
 ~~~ http-message
 PUT /items/123 HTTP/1.1
@@ -240,20 +272,18 @@ Content-Type: application/problem+json
 
 {
   "type": "https://iana.org/assignments/http-problem-types#\
-    digest-mismatching-value",
-  "title": "digest value from request does not match expected value",
-  "algorithm": "sha-256",
-  "provided-digest": ":RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:",
-  "header": "Repr-Digest"
+    digest-mismatching-values",
+  "title": "Mismatching digest values",
+  "mismatching-digests": [
+    {
+      "algorithm": "sha-256",
+      "provided-digest": ":RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:",
+      "header": "Repr-Digest"
+    }
+  ]
 }
 ~~~
 {: title="Response indicating the mismatching digests"}
-
-# Identifying Problem Causing Headers
-
-Requests can include multiple integrity or integrity preference fields. For example, they may use the `Content-Digest` and `Repr-Digest` fields simultaneously or express preferences for content and representation digests at the same time. To aid troubleshooting, it's useful to identify the header field, whose value caused the problem detailed in the response. For this reason, the `header` extension member is defined, which SHOULD be populated for all responses using the problem types defined in this document.
-
-The `header` extension member's value is the header field name that caused the problem. Since HTTP header field names are case-insensitive and not all HTTP versions preserve their casing, the casing of extension member's value might not match the request header field name's casing.
 
 # Security Considerations
 
@@ -271,46 +301,46 @@ the calculated digest to avoid exposing information that can be abused for oracl
 
 IANA is asked to register the following entries in the "HTTP Problem Types" registry at <https://www.iana.org/assignments/http-problem-types>.
 
-## Registration of "digest-unsupported-algorithm" Problem Type
+## Registration of "digest-unsupported-algorithms" Problem Type
 
 Type URI:
-: https://iana.org/assignments/http-problem-types#digest-unsupported-algorithm
+: https://iana.org/assignments/http-problem-types#digest-unsupported-algorithms
 
 Title:
-: Unsupported Hashing Algorithm
+: Unsupported Hashing Algorithms
 
 Recommended HTTP status code:
 : 400
 
 Reference:
-: {{unsupported-hashing-algorithm}} of this document
+: {{unsupported-hashing-algorithms}} of this document
 
-## Registration of "digest-invalid-value" Problem Type
+## Registration of "digest-invalid-values" Problem Type
 
 Type URI:
-: https://iana.org/assignments/http-problem-types#digest-invalid-value
+: https://iana.org/assignments/http-problem-types#digest-invalid-values
 
 Title:
-: Invalid Digest Value
+: Invalid Digest Values
 
 Recommended HTTP status code:
 : 400
 
 Reference:
-: {{invalid-digest-value}} of this document
+: {{invalid-digest-values}} of this document
 
-## Registration of "digest-mismatching-value" Problem Type
+## Registration of "digest-mismatching-values" Problem Type
 
 Type URI:
-: https://iana.org/assignments/http-problem-types#digest-mismatching-value
+: https://iana.org/assignments/http-problem-types#digest-mismatching-values
 
 Title:
-: Mismatching Digest Value
+: Mismatching Digest Values
 
 Recommended HTTP status code:
 : 400
 
 Reference:
-: {{mismatching-digest-value}} of this document
+: {{mismatching-digest-values}} of this document
 
 --- back
