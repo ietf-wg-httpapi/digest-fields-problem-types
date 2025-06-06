@@ -72,7 +72,7 @@ Want-Content-Digest: sha-512=3, sha-256=10
     digest-unsupported-algorithm",
   "title": "hashing algorithm is not supported",
   "unsupported-algorithm": "foo",
-  "header": "Wand-Content-Digest"
+  "header": "Want-Content-Digest"
 }
 ~~~
 
@@ -88,7 +88,7 @@ interpreted as described in {{DIGEST}}.
 The term "problem type" in this document is to be
 interpreted as described in {{PROBLEM}}.
 
-The terms "request", "response", "intermediary", "sender", and "server" are from {{HTTP}}.
+The terms "request", "response", "intermediary", "sender", "client", and "server" are from {{HTTP}}.
 
 # Problem Types
 
@@ -209,7 +209,6 @@ Content-Type: application/problem+json
 ## Mismatching Digest Value
 
 This section defines the "https://iana.org/assignments/http-problem-types#digest-mismatching-value" problem type. A server MAY use this problem type when responding to a request, whose integrity fields include a digest value that does not match the digest value that the server calculated for the request content or representation.
-
 
 Three problem type extension members are defined, which SHOULD be populated for all responses using this problem type:
 
