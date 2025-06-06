@@ -5,10 +5,10 @@
 Building Blocks for HTTP APIs                                  M. Kleidl
 Internet-Draft                                               Transloadit
 Intended status: Informational                                 L. Pardue
-Expires: 27 October 2025                                      Cloudflare
+Expires: 8 December 2025                                      Cloudflare
                                                                 R. Polli
                                                                  Par-Tec
-                                                           25 April 2025
+                                                             6 June 2025
 
 
                   HTTP Problem Types for Digest Fields
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 October 2025.
+   This Internet-Draft will expire on 8 December 2025.
 
 Copyright Notice
 
@@ -115,7 +115,7 @@ Table of Contents
        digest-unsupported-algorithm",
      "title": "hashing algorithm is not supported",
      "unsupported-algorithm": "foo",
-     "header": "Wand-Content-Digest"
+     "header": "Want-Content-Digest"
    }
 
 2.  Conventions and Definitions
@@ -135,8 +135,8 @@ Table of Contents
    The term "problem type" in this document is to be interpreted as
    described in [PROBLEM].
 
-   The terms "request", "response", "intermediary", "sender", and
-   "server" are from [HTTP].
+   The terms "request", "response", "intermediary", "sender", "client",
+   and "server" are from [HTTP].
 
 3.  Problem Types
 
