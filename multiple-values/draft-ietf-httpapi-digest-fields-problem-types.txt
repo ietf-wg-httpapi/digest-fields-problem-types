@@ -180,7 +180,7 @@ Table of Contents
    *  The algorithm member is a JSON string containing the algorithm key
       of the unsupported algorithm.
 
-   *  The header member is a JSON string containing the name of
+   *  The header member is a JSON string containing the name of the
       integrity or integrity preference field that referenced the
       unsupported algorithm.
 
