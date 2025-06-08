@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-27T00:50:51.741517+00:00",
+  "timestamp": "2025-06-08T00:55:02.452409+00:00",
   "repo": "ietf-wg-httpapi/digest-fields-problem-types",
   "labels": [
     {
@@ -150,6 +150,46 @@
           "body": "",
           "createdAt": "2025-03-19T02:08:44Z",
           "updatedAt": "2025-03-19T02:08:44Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDONJ2BSc6ZWhlF",
+      "title": "Allow reporting problems on multiple digests",
+      "url": "https://github.com/ietf-wg-httpapi/digest-fields-problem-types/pull/5",
+      "state": "OPEN",
+      "author": "Acconut",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "A request can include multiple integrity fields and each field can include multiple digests. Thus problems of the same type can appear multiple times. These changes adapt the problem types so they can carry information about multiple instances of the same problem.",
+      "createdAt": "2025-06-06T08:25:31Z",
+      "updatedAt": "2025-06-06T16:11:43Z",
+      "baseRepository": "ietf-wg-httpapi/digest-fields-problem-types",
+      "baseRefName": "main",
+      "baseRefOid": "8734094e83fff01b501fdeda2c8647465168d59b",
+      "headRepository": "ietf-wg-httpapi/digest-fields-problem-types",
+      "headRefName": "multiple-values",
+      "headRefOid": "798a0b2cef8755a27cd1e917722656cf968346d9",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDONJ2BSc6tLMBx",
+          "commit": {
+            "abbreviatedOid": "798a0b2"
+          },
+          "author": "richsalz",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "This makes sense and the text is clear.",
+          "createdAt": "2025-06-06T16:11:43Z",
+          "updatedAt": "2025-06-06T16:11:43Z",
           "comments": []
         }
       ]
