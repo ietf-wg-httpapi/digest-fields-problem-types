@@ -128,7 +128,6 @@ POST /books HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept: application/json
-Accept-Encoding: identity
 Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
 Content-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
 Unencoded-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
