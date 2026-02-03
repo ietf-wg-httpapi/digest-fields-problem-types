@@ -295,7 +295,7 @@ Content-Type: application/problem+json
 
 # Security Considerations
 
-All security considerations from {{Section 6 of DIGEST}} apply as well.
+All security considerations from {{Section 6 of DIGEST}} and {{Section 7 of UNENC-DIGEST}} apply as well.
 
 Disclosing error details could leak information
 such as the presence of intermediaries or the server's implementation details.
