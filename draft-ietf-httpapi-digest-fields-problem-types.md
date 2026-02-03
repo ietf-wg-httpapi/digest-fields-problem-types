@@ -40,6 +40,7 @@ author:
 
 normative:
   DIGEST: RFC9530
+  UNENC-DIGEST: I-D.draft-ietf-httpbis-unencoded-digest
   PROBLEM: RFC9457
   STRUCTURED-FIELDS: RFC9651
   HTTP: RFC9110
@@ -57,7 +58,7 @@ This document specifies HTTP problem types that servers can use in responses to 
 
 # Introduction
 
-{{DIGEST}} defines HTTP fields for exchanging integrity digests and preferences, but does not specify, require, or recommend any specific behavior for error handling relating to integrity by design. The responsibility is instead delegated to applications. This document defines a set of HTTP problem types ({{PROBLEM}}) that can be used by server applications to indicate that a problem was encountered while dealing with a request carrying integrity fields and integrity preference fields.
+{{DIGEST}} and {{UNENC-DIGEST}} define HTTP fields for exchanging integrity digests and preferences, but do not specify, require, or recommend any specific behavior for error handling relating to integrity by design. The responsibility is instead delegated to applications. This document defines a set of HTTP problem types ({{PROBLEM}}) that can be used by server applications to indicate that a problem was encountered while dealing with a request carrying integrity fields and integrity preference fields.
 
 For example, a request message may include content alongside `Content-Digest` and `Repr-Digest` fields that use a digest algorithm the server does not support. An application could decide to reject this request because it cannot validate the integrity. Using an HTTP problem type, the server can provide machine-readable error details to aid debugging or error reporting, as shown in the following example.
 
@@ -88,7 +89,7 @@ Want-Content-Digest: sha-512=3, sha-256=10
 Some examples in this document contain long lines that may be folded, as described in {{RFC8792}}.
 
 The terms "integrity fields" and "integrity preference fields" in this document are to be
-interpreted as described in {{DIGEST}}.
+interpreted as described in {{DIGEST}} and updated in {{UNENC-DIGEST}}.
 
 The term "problem type" in this document is to be
 interpreted as described in {{PROBLEM}}.
@@ -130,6 +131,7 @@ Accept: application/json
 Accept-Encoding: identity
 Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
 Content-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
+Unencoded-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
 
 {"title": "New Title"}
 ~~~
@@ -142,6 +144,7 @@ HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
 Want-Repr-Digest: sha-512=10, sha-256=0
 Want-Content-Digest: sha-512=10, sha-256=0
+Want-Unencoded-Digest: sha-512=10, sha-256=0
 
 {
   "type": "https://iana.org/assignments/http-problem-types#\
@@ -155,6 +158,10 @@ Want-Content-Digest: sha-512=10, sha-256=0
     {
       "algorithm": "sha-256",
       "header": "Content-Digest"
+    },
+    {
+      "algorithm": "sha-256",
+      "header": "Unencoded-Digest"
     }
   ]
 }
