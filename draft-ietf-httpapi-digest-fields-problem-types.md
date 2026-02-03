@@ -237,22 +237,22 @@ Content-Type: application/problem+json
 ~~~
 {: title="Response indicating that the provided digest is too short"}
 
-## Mismatching Digest Values
+## Mismatched Digest Values
 
-This section defines the "https://iana.org/assignments/http-problem-types#digest-mismatching-values" problem type. A server can use this problem type when responding to a request, whose integrity fields include a digest value that does not match the digest value that the server calculated for the request content or representation.
+This section defines the "https://iana.org/assignments/http-problem-types#digest-mismatched-values" problem type. A server can use this problem type when responding to a request, whose integrity fields include a digest value that does not match the digest value that the server calculated for the request content or representation.
 
-For this problem type, the `mismatching-digests` extension member is defined, whose value is a JSON {{JSON}} array of entries identifying each mismatching digest.
+For this problem type, the `mismatched-digests` extension member is defined, whose value is a JSON {{JSON}} array of entries identifying each mismatched digest.
 Each entry in the array is a JSON object with the following members:
 
 - The `algorithm` member is a JSON string containing the algorithm key of the hashing algorithm.
 - The `provided-digest` member is a JSON string containing the digest value taken from the request's integrity fields. The digest value is serialized as a byte sequence as described in {{Section 4.1.8 of STRUCTURED-FIELDS}}.
-- The `header` member is a JSON string containing the name of the integrity field that contained the mismatching digest value.
+- The `header` member is a JSON string containing the name of the integrity field that contained the mismatched digest value.
 
 The problem type intentionally does not include the digest value calculated by the server to avoid attackers abusing this information for oracle attacks.
 
 If the sender receives this problem type, the request might be modified unintentionally by an intermediary. The sender could use this information to retry the request without modification to address temporary transmission issues.
 
-The following example shows a request with the content `{"hello": "woXYZ"}` (plus LF), but the representation digest for `{"hello": "world"}` (plus LF). The subsequent response indicates the mismatching SHA-256 digest value.
+The following example shows a request with the content `{"hello": "woXYZ"}` (plus LF), but the representation digest for `{"hello": "world"}` (plus LF). The subsequent response indicates the mismatched SHA-256 digest value.
 
 ~~~ http-message
 PUT /items/123 HTTP/1.1
@@ -272,9 +272,9 @@ Content-Type: application/problem+json
 
 {
   "type": "https://iana.org/assignments/http-problem-types#\
-    digest-mismatching-values",
-  "title": "Mismatching digest values",
-  "mismatching-digests": [
+    digest-mismatched-values",
+  "title": "Mismatched digest values",
+  "mismatched-digests": [
     {
       "algorithm": "sha-256",
       "provided-digest": \
@@ -284,7 +284,7 @@ Content-Type: application/problem+json
   ]
 }
 ~~~
-{: title="Response indicating the mismatching digests"}
+{: title="Response indicating the mismatched digests"}
 
 # Security Considerations
 
@@ -297,7 +297,7 @@ Moreover, they can be used to fingerprint the server.
 To mitigate these risks, a server could assess the risk of disclosing error details
 and prefer a general problem type over a more specific one.
 
-When a server informs the client about mismatching digest values, it should not expose
+When a server informs the client about mismatched digest values, it should not expose
 the calculated digest to avoid exposing information that can be abused for oracle attacks.
 
 # IANA Considerations
@@ -332,18 +332,18 @@ Recommended HTTP status code:
 Reference:
 : {{invalid-digest-values}} of this document
 
-## Registration of "digest-mismatching-values" Problem Type
+## Registration of "digest-mismatched-values" Problem Type
 
 Type URI:
-: https://iana.org/assignments/http-problem-types#digest-mismatching-values
+: https://iana.org/assignments/http-problem-types#digest-mismatched-values
 
 Title:
-: Mismatching Digest Values
+: Mismatched Digest Values
 
 Recommended HTTP status code:
 : 400
 
 Reference:
-: {{mismatching-digest-values}} of this document
+: {{mismatched-digest-values}} of this document
 
 --- back
