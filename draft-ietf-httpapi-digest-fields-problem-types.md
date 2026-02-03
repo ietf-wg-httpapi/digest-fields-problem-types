@@ -128,22 +128,22 @@ POST /books HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept: application/json
-Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
-Content-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
-Unencoded-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
+Repr-Digest: md5=:CY9rzUYh03PK3k6DJie09g==:
+Content-Digest: md5=:CY9rzUYh03PK3k6DJie09g==:
+Unencoded-Digest: md5=:CY9rzUYh03PK3k6DJie09g==:
 
 {"title": "New Title"}
 ~~~
-{: title="A request with sha-256 integrity fields, which are not supported by the server"}
+{: title="A request with md5 integrity fields, which are not supported by the server as the algorithm is deprecated"}
 
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
-Want-Repr-Digest: sha-512=10, sha-256=0
-Want-Content-Digest: sha-512=10, sha-256=0
-Want-Unencoded-Digest: sha-512=10, sha-256=0
+Want-Repr-Digest: sha-512=10, md5=0
+Want-Content-Digest: sha-512=10, md5=0
+Want-Unencoded-Digest: sha-512=10, md5=0
 
 {
   "type": "https://iana.org/assignments/http-problem-types#\
@@ -151,15 +151,15 @@ Want-Unencoded-Digest: sha-512=10, sha-256=0
   "title": "Unsupported hashing algorithms",
   "unsupported-algorithms": [
     {
-      "algorithm": "sha-256",
+      "algorithm": "md5",
       "header": "Repr-Digest"
     },
     {
-      "algorithm": "sha-256",
+      "algorithm": "md5",
       "header": "Content-Digest"
     },
     {
-      "algorithm": "sha-256",
+      "algorithm": "md5",
       "header": "Unencoded-Digest"
     }
   ]
@@ -172,10 +172,10 @@ This problem type can also be used when a request contains an integrity preferen
 ~~~ http-message
 GET /items/123 HTTP/1.1
 Host: foo.example
-Want-Repr-Digest: sha=10
+Want-Repr-Digest: md5=10
 
 ~~~
-{: title="A request with a sha-256 integrity preference field, which is not supported by the server"}
+{: title="A request with a md5 integrity preference field, which is not supported by the server as the algorithm is deprecated"}
 
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
@@ -189,13 +189,13 @@ Content-Type: application/problem+json
   "title": "Unsupported hashing algorithms",
   "unsupported-algorithms": [
     {
-      "algorithm": "sha",
+      "algorithm": "md5",
       "header": "Want-Repr-Digest"
     }
   ]
 }
 ~~~
-{: title="Response indicating the problem and advertising the supported algorithms"}
+{: title="Response indicating the problem"}
 
 ## Invalid Digest Values
 
