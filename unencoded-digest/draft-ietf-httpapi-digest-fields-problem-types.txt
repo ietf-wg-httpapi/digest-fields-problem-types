@@ -200,23 +200,22 @@ Table of Contents
    Host: foo.example
    Content-Type: application/json
    Accept: application/json
-   Accept-Encoding: identity
-   Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
-   Content-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
-   Unencoded-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
+   Repr-Digest: md5=:CY9rzUYh03PK3k6DJie09g==:
+   Content-Digest: md5=:CY9rzUYh03PK3k6DJie09g==:
+   Unencoded-Digest: md5=:CY9rzUYh03PK3k6DJie09g==:
 
    {"title": "New Title"}
 
-      Figure 1: A request with sha-256 integrity fields, which are not
-                          supported by the server
+        Figure 1: A request with md5 integrity fields, which are not
+           supported by the server as the algorithm is deprecated
 
    # NOTE: '\' line wrapping per RFC 8792
 
    HTTP/1.1 400 Bad Request
    Content-Type: application/problem+json
-   Want-Repr-Digest: sha-512=10, sha-256=0
-   Want-Content-Digest: sha-512=10, sha-256=0
-   Want-Unencoded-Digest: sha-512=10, sha-256=0
+   Want-Repr-Digest: sha-512=10, md5=0
+   Want-Content-Digest: sha-512=10, md5=0
+   Want-Unencoded-Digest: sha-512=10, md5=0
 
    {
      "type": "https://iana.org/assignments/http-problem-types#\
@@ -224,15 +223,15 @@ Table of Contents
      "title": "Unsupported hashing algorithms",
      "unsupported-algorithms": [
        {
-         "algorithm": "sha-256",
+         "algorithm": "md5",
          "header": "Repr-Digest"
        },
        {
-         "algorithm": "sha-256",
+         "algorithm": "md5",
          "header": "Content-Digest"
        },
        {
-         "algorithm": "sha-256",
+         "algorithm": "md5",
          "header": "Unencoded-Digest"
        }
      ]
@@ -247,10 +246,10 @@ Table of Contents
 
    GET /items/123 HTTP/1.1
    Host: foo.example
-   Want-Repr-Digest: sha=10
+   Want-Repr-Digest: md5=10
 
-       Figure 3: A request with a sha-256 integrity preference field,
-                    which is not supported by the server
+      Figure 3: A request with a md5 integrity preference field, which
+       is not supported by the server as the algorithm is deprecated
 
    # NOTE: '\' line wrapping per RFC 8792
 
@@ -263,14 +262,13 @@ Table of Contents
      "title": "Unsupported hashing algorithms",
      "unsupported-algorithms": [
        {
-         "algorithm": "sha",
+         "algorithm": "md5",
          "header": "Want-Repr-Digest"
        }
      ]
    }
 
-       Figure 4: Response indicating the problem and advertising the
-                            supported algorithms
+                 Figure 4: Response indicating the problem
 
 3.2.  Invalid Digest Values
 
@@ -408,7 +406,8 @@ Table of Contents
 
 4.  Security Considerations
 
-   All security considerations from Section 6 of [DIGEST] apply as well.
+   All security considerations from Section 6 of [DIGEST] and Section 7
+   of [UNENC-DIGEST] apply as well.
 
    Disclosing error details could leak information such as the presence
    of intermediaries or the server's implementation details.  Moreover,

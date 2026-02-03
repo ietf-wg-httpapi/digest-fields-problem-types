@@ -1281,23 +1281,22 @@ Each entry in the array is a JSON object with the following members:<a href="#se
 <p id="section-3.1-4">The response can include the corresponding integrity preference field to indicate the server's algorithm support and preference.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
 <p id="section-3.1-5">This problem type is a hint to the client about algorithm support, which the client could use to retry the request with different, supported algorithms.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
 <p id="section-3.1-6">Example:<a href="#section-3.1-6" class="pilcrow">¶</a></p>
-<span id="name-a-request-with-sha-256-inte"></span><figure id="figure-1">
+<span id="name-a-request-with-md5-integrit"></span><figure id="figure-1">
           <div class="lang-http-message sourcecode" id="section-3.1-7.1">
 <pre>
 POST /books HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept: application/json
-Accept-Encoding: identity
-Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
-Content-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
-Unencoded-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
+Repr-Digest: md5=:CY9rzUYh03PK3k6DJie09g==:
+Content-Digest: md5=:CY9rzUYh03PK3k6DJie09g==:
+Unencoded-Digest: md5=:CY9rzUYh03PK3k6DJie09g==:
 
 {"title": "New Title"}
 </pre>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-a-request-with-sha-256-inte" class="selfRef">A request with sha-256 integrity fields, which are not supported by the server</a>
+<a href="#name-a-request-with-md5-integrit" class="selfRef">A request with md5 integrity fields, which are not supported by the server as the algorithm is deprecated</a>
           </figcaption></figure>
 <span id="name-response-indicating-the-pro"></span><figure id="figure-2">
           <div class="lang-http-message sourcecode" id="section-3.1-8.1">
@@ -1306,9 +1305,9 @@ Unencoded-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
 
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
-Want-Repr-Digest: sha-512=10, sha-256=0
-Want-Content-Digest: sha-512=10, sha-256=0
-Want-Unencoded-Digest: sha-512=10, sha-256=0
+Want-Repr-Digest: sha-512=10, md5=0
+Want-Content-Digest: sha-512=10, md5=0
+Want-Unencoded-Digest: sha-512=10, md5=0
 
 {
   "type": "https://iana.org/assignments/http-problem-types#\
@@ -1316,15 +1315,15 @@ Want-Unencoded-Digest: sha-512=10, sha-256=0
   "title": "Unsupported hashing algorithms",
   "unsupported-algorithms": [
     {
-      "algorithm": "sha-256",
+      "algorithm": "md5",
       "header": "Repr-Digest"
     },
     {
-      "algorithm": "sha-256",
+      "algorithm": "md5",
       "header": "Content-Digest"
     },
     {
-      "algorithm": "sha-256",
+      "algorithm": "md5",
       "header": "Unencoded-Digest"
     }
   ]
@@ -1335,17 +1334,17 @@ Want-Unencoded-Digest: sha-512=10, sha-256=0
 <a href="#name-response-indicating-the-pro" class="selfRef">Response indicating the problem and advertising the supported algorithms</a>
           </figcaption></figure>
 <p id="section-3.1-9">This problem type can also be used when a request contains an integrity preference field with an unsupported algorithm. For example:<a href="#section-3.1-9" class="pilcrow">¶</a></p>
-<span id="name-a-request-with-a-sha-256-in"></span><figure id="figure-3">
+<span id="name-a-request-with-a-md5-integr"></span><figure id="figure-3">
           <div class="lang-http-message sourcecode" id="section-3.1-10.1">
 <pre>
 GET /items/123 HTTP/1.1
 Host: foo.example
-Want-Repr-Digest: sha=10
+Want-Repr-Digest: md5=10
 
 </pre>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
-<a href="#name-a-request-with-a-sha-256-in" class="selfRef">A request with a sha-256 integrity preference field, which is not supported by the server</a>
+<a href="#name-a-request-with-a-md5-integr" class="selfRef">A request with a md5 integrity preference field, which is not supported by the server as the algorithm is deprecated</a>
           </figcaption></figure>
 <span id="name-response-indicating-the-prob"></span><figure id="figure-4">
           <div class="lang-http-message sourcecode" id="section-3.1-11.1">
@@ -1361,7 +1360,7 @@ Content-Type: application/problem+json
   "title": "Unsupported hashing algorithms",
   "unsupported-algorithms": [
     {
-      "algorithm": "sha",
+      "algorithm": "md5",
       "header": "Want-Repr-Digest"
     }
   ]
@@ -1369,7 +1368,7 @@ Content-Type: application/problem+json
 </pre>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
-<a href="#name-response-indicating-the-prob" class="selfRef">Response indicating the problem and advertising the supported algorithms</a>
+<a href="#name-response-indicating-the-prob" class="selfRef">Response indicating the problem</a>
           </figcaption></figure>
 </section>
 </div>
@@ -1457,7 +1456,7 @@ Each entry in the array is a JSON object with the following members:<a href="#se
 <p id="section-3.3-4">The problem type intentionally does not include the digest value calculated by the server to avoid attackers abusing this information for oracle attacks.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 <p id="section-3.3-5">If the sender receives this problem type, the request might be modified unintentionally by an intermediary. The sender could use this information to retry the request without modification to address temporary transmission issues.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 <p id="section-3.3-6">The following example shows a request with the content <code>{"hello": "woXYZ"}</code> (plus LF), but the representation digest for <code>{"hello": "world"}</code> (plus LF). The subsequent response indicates the mismatched SHA-256 digest value.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
-<span id="name-a-request-with-a-sha-256-int"></span><figure id="figure-7">
+<span id="name-a-request-with-a-sha-256-in"></span><figure id="figure-7">
           <div class="lang-http-message sourcecode" id="section-3.3-7.1">
 <pre>
 PUT /items/123 HTTP/1.1
@@ -1469,7 +1468,7 @@ Repr-Digest: sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
 </pre>
 </div>
 <figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
-<a href="#name-a-request-with-a-sha-256-int" class="selfRef">A request with a sha-256 integrity field, which does not belong to the representation</a>
+<a href="#name-a-request-with-a-sha-256-in" class="selfRef">A request with a sha-256 integrity field, which does not belong to the representation</a>
           </figcaption></figure>
 <span id="name-response-indicating-the-mis"></span><figure id="figure-8">
           <div class="lang-http-message sourcecode" id="section-3.3-8.1">
@@ -1506,7 +1505,7 @@ Content-Type: application/problem+json
       <h2 id="name-security-considerations">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-4-1">All security considerations from <span><a href="https://rfc-editor.org/rfc/rfc9530#section-6" class="relref">Section 6</a> of [<a href="#DIGEST" class="cite xref">DIGEST</a>]</span> apply as well.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">All security considerations from <span><a href="https://rfc-editor.org/rfc/rfc9530#section-6" class="relref">Section 6</a> of [<a href="#DIGEST" class="cite xref">DIGEST</a>]</span> and <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-unencoded-digest-03#section-7" class="relref">Section 7</a> of [<a href="#UNENC-DIGEST" class="cite xref">UNENC-DIGEST</a>]</span> apply as well.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">Disclosing error details could leak information
 such as the presence of intermediaries or the server's implementation details.
 Moreover, they can be used to fingerprint the server.<a href="#section-4-2" class="pilcrow">¶</a></p>
