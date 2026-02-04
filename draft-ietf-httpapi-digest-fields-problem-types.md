@@ -40,6 +40,7 @@ author:
 
 normative:
   DIGEST: RFC9530
+  UNENC-DIGEST: I-D.draft-ietf-httpbis-unencoded-digest
   PROBLEM: RFC9457
   STRUCTURED-FIELDS: RFC9651
   HTTP: RFC9110
@@ -57,7 +58,7 @@ This document specifies HTTP problem types that servers can use in responses to 
 
 # Introduction
 
-{{DIGEST}} defines HTTP fields for exchanging integrity digests and preferences, but does not specify, require, or recommend any specific behavior for error handling relating to integrity by design. The responsibility is instead delegated to applications. This document defines a set of HTTP problem types ({{PROBLEM}}) that can be used by server applications to indicate that a problem was encountered while dealing with a request carrying integrity fields and integrity preference fields.
+{{DIGEST}} and {{UNENC-DIGEST}} define HTTP fields for exchanging integrity digests and preferences, but do not specify, require, or recommend any specific behavior for error handling relating to integrity by design. The responsibility is instead delegated to applications. This document defines a set of HTTP problem types ({{PROBLEM}}) that can be used by server applications to indicate that a problem was encountered while dealing with a request carrying integrity fields and integrity preference fields.
 
 For example, a request message may include content alongside `Content-Digest` and `Repr-Digest` fields that use a digest algorithm the server does not support. An application could decide to reject this request because it cannot validate the integrity. Using an HTTP problem type, the server can provide machine-readable error details to aid debugging or error reporting, as shown in the following example.
 
@@ -88,7 +89,7 @@ Want-Content-Digest: sha-512=3, sha-256=10
 Some examples in this document contain long lines that may be folded, as described in {{RFC8792}}.
 
 The terms "integrity fields" and "integrity preference fields" in this document are to be
-interpreted as described in {{DIGEST}}.
+interpreted as described in {{DIGEST}} and updated in {{UNENC-DIGEST}}.
 
 The term "problem type" in this document is to be
 interpreted as described in {{PROBLEM}}.
@@ -120,28 +121,29 @@ The response can include the corresponding integrity preference field to indicat
 
 This problem type is a hint to the client about algorithm support, which the client could use to retry the request with different, supported algorithms.
 
-Example:
+The following example shows a request with the content `{"title": "New Title"}` (plus LF). The digest fields use the MD5 algorithm, which is not supported by the server as the algorithm is deprecated.
 
 ~~~ http-message
 POST /books HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept: application/json
-Accept-Encoding: identity
-Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
-Content-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
+Repr-Digest: md5=:Uwq9xB4MJtDTknVOSEE1WA==:
+Content-Digest: md5=:Uwq9xB4MJtDTknVOSEE1WA==:
+Unencoded-Digest: md5=:Uwq9xB4MJtDTknVOSEE1WA==:
 
 {"title": "New Title"}
 ~~~
-{: title="A request with sha-256 integrity fields, which are not supported by the server"}
+{: title="A request with md5 integrity fields, which are not supported by the server"}
 
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
-Want-Repr-Digest: sha-512=10, sha-256=0
-Want-Content-Digest: sha-512=10, sha-256=0
+Want-Repr-Digest: sha-512=10, md5=0
+Want-Content-Digest: sha-512=10, md5=0
+Want-Unencoded-Digest: sha-512=10, md5=0
 
 {
   "type": "https://iana.org/assignments/http-problem-types#\
@@ -149,12 +151,16 @@ Want-Content-Digest: sha-512=10, sha-256=0
   "title": "Unsupported hashing algorithms",
   "unsupported-algorithms": [
     {
-      "algorithm": "sha-256",
+      "algorithm": "md5",
       "header": "Repr-Digest"
     },
     {
-      "algorithm": "sha-256",
+      "algorithm": "md5",
       "header": "Content-Digest"
+    },
+    {
+      "algorithm": "md5",
+      "header": "Unencoded-Digest"
     }
   ]
 }
@@ -166,10 +172,10 @@ This problem type can also be used when a request contains an integrity preferen
 ~~~ http-message
 GET /items/123 HTTP/1.1
 Host: foo.example
-Want-Repr-Digest: sha=10
+Want-Repr-Digest: md5=10
 
 ~~~
-{: title="A request with a sha-256 integrity preference field, which is not supported by the server"}
+{: title="A request with a md5 integrity preference field, which is not supported by the server"}
 
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
@@ -183,13 +189,13 @@ Content-Type: application/problem+json
   "title": "Unsupported hashing algorithms",
   "unsupported-algorithms": [
     {
-      "algorithm": "sha",
+      "algorithm": "md5",
       "header": "Want-Repr-Digest"
     }
   ]
 }
 ~~~
-{: title="Response indicating the problem and advertising the supported algorithms"}
+{: title="Response indicating the problem"}
 
 ## Invalid Digest Values
 
@@ -288,7 +294,7 @@ Content-Type: application/problem+json
 
 # Security Considerations
 
-All security considerations from {{Section 6 of DIGEST}} apply as well.
+All security considerations from {{Section 6 of DIGEST}} and {{Section 7 of UNENC-DIGEST}} apply as well.
 
 Disclosing error details could leak information
 such as the presence of intermediaries or the server's implementation details.
