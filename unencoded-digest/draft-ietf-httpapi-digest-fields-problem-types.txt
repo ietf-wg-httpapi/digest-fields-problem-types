@@ -5,10 +5,10 @@
 Building Blocks for HTTP APIs                                  M. Kleidl
 Internet-Draft                                               Transloadit
 Intended status: Informational                                 L. Pardue
-Expires: 7 August 2026                                        Cloudflare
+Expires: 8 August 2026                                        Cloudflare
                                                                 R. Polli
                                                                  Par-Tec
-                                                         3 February 2026
+                                                         4 February 2026
 
 
                   HTTP Problem Types for Digest Fields
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 August 2026.
+   This Internet-Draft will expire on 8 August 2026.
 
 Copyright Notice
 
@@ -194,20 +194,22 @@ Table of Contents
    which the client could use to retry the request with different,
    supported algorithms.
 
-   Example:
+   The following example shows a request with the content {"title": "New
+   Title"} (plus LF).  The digest fields use the MD5 algorithm, which is
+   not supported by the server as the algorithm is deprecated.
 
    POST /books HTTP/1.1
    Host: foo.example
    Content-Type: application/json
    Accept: application/json
-   Repr-Digest: md5=:A1CFwRiuZWS0No0SWTUNuQ==:
-   Content-Digest: md5=:A1CFwRiuZWS0No0SWTUNuQ==:
-   Unencoded-Digest: md5=:A1CFwRiuZWS0No0SWTUNuQ==:
+   Repr-Digest: md5=:Uwq9xB4MJtDTknVOSEE1WA==:
+   Content-Digest: md5=:Uwq9xB4MJtDTknVOSEE1WA==:
+   Unencoded-Digest: md5=:Uwq9xB4MJtDTknVOSEE1WA==:
 
    {"title": "New Title"}
 
         Figure 1: A request with md5 integrity fields, which are not
-           supported by the server as the algorithm is deprecated
+                          supported by the server
 
    # NOTE: '\' line wrapping per RFC 8792
 
@@ -249,7 +251,7 @@ Table of Contents
    Want-Repr-Digest: md5=10
 
       Figure 3: A request with a md5 integrity preference field, which
-       is not supported by the server as the algorithm is deprecated
+                       is not supported by the server
 
    # NOTE: '\' line wrapping per RFC 8792
 
