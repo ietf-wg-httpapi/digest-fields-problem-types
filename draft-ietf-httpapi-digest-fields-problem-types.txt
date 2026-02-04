@@ -5,10 +5,10 @@
 Building Blocks for HTTP APIs                                  M. Kleidl
 Internet-Draft                                               Transloadit
 Intended status: Informational                                 L. Pardue
-Expires: 7 August 2026                                        Cloudflare
+Expires: 8 August 2026                                        Cloudflare
                                                                 R. Polli
                                                                  Par-Tec
-                                                         3 February 2026
+                                                         4 February 2026
 
 
                   HTTP Problem Types for Digest Fields
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 August 2026.
+   This Internet-Draft will expire on 8 August 2026.
 
 Copyright Notice
 
@@ -90,14 +90,14 @@ Table of Contents
 
 1.  Introduction
 
-   [DIGEST] defines HTTP fields for exchanging integrity digests and
-   preferences, but does not specify, require, or recommend any specific
-   behavior for error handling relating to integrity by design.  The
-   responsibility is instead delegated to applications.  This document
-   defines a set of HTTP problem types ([PROBLEM]) that can be used by
-   server applications to indicate that a problem was encountered while
-   dealing with a request carrying integrity fields and integrity
-   preference fields.
+   [DIGEST] and [UNENC-DIGEST] define HTTP fields for exchanging
+   integrity digests and preferences, but do not specify, require, or
+   recommend any specific behavior for error handling relating to
+   integrity by design.  The responsibility is instead delegated to
+   applications.  This document defines a set of HTTP problem types
+   ([PROBLEM]) that can be used by server applications to indicate that
+   a problem was encountered while dealing with a request carrying
+   integrity fields and integrity preference fields.
 
    For example, a request message may include content alongside Content-
    Digest and Repr-Digest fields that use a digest algorithm the server
@@ -136,7 +136,8 @@ Table of Contents
    as described in [RFC8792].
 
    The terms "integrity fields" and "integrity preference fields" in
-   this document are to be interpreted as described in [DIGEST].
+   this document are to be interpreted as described in [DIGEST] and
+   updated in [UNENC-DIGEST].
 
    The term "problem type" in this document is to be interpreted as
    described in [PROBLEM].
@@ -193,27 +194,30 @@ Table of Contents
    which the client could use to retry the request with different,
    supported algorithms.
 
-   Example:
+   The following example shows a request with the content {"title": "New
+   Title"} (plus LF).  The digest fields use the MD5 algorithm, which is
+   not supported by the server as the algorithm is deprecated.
 
    POST /books HTTP/1.1
    Host: foo.example
    Content-Type: application/json
    Accept: application/json
-   Accept-Encoding: identity
-   Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
-   Content-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
+   Repr-Digest: md5=:Uwq9xB4MJtDTknVOSEE1WA==:
+   Content-Digest: md5=:Uwq9xB4MJtDTknVOSEE1WA==:
+   Unencoded-Digest: md5=:Uwq9xB4MJtDTknVOSEE1WA==:
 
    {"title": "New Title"}
 
-      Figure 1: A request with sha-256 integrity fields, which are not
+        Figure 1: A request with md5 integrity fields, which are not
                           supported by the server
 
    # NOTE: '\' line wrapping per RFC 8792
 
    HTTP/1.1 400 Bad Request
    Content-Type: application/problem+json
-   Want-Repr-Digest: sha-512=10, sha-256=0
-   Want-Content-Digest: sha-512=10, sha-256=0
+   Want-Repr-Digest: sha-512=10, md5=0
+   Want-Content-Digest: sha-512=10, md5=0
+   Want-Unencoded-Digest: sha-512=10, md5=0
 
    {
      "type": "https://iana.org/assignments/http-problem-types#\
@@ -221,12 +225,16 @@ Table of Contents
      "title": "Unsupported hashing algorithms",
      "unsupported-algorithms": [
        {
-         "algorithm": "sha-256",
+         "algorithm": "md5",
          "header": "Repr-Digest"
        },
        {
-         "algorithm": "sha-256",
+         "algorithm": "md5",
          "header": "Content-Digest"
+       },
+       {
+         "algorithm": "md5",
+         "header": "Unencoded-Digest"
        }
      ]
    }
@@ -240,10 +248,10 @@ Table of Contents
 
    GET /items/123 HTTP/1.1
    Host: foo.example
-   Want-Repr-Digest: sha=10
+   Want-Repr-Digest: md5=10
 
-       Figure 3: A request with a sha-256 integrity preference field,
-                    which is not supported by the server
+      Figure 3: A request with a md5 integrity preference field, which
+                       is not supported by the server
 
    # NOTE: '\' line wrapping per RFC 8792
 
@@ -256,14 +264,13 @@ Table of Contents
      "title": "Unsupported hashing algorithms",
      "unsupported-algorithms": [
        {
-         "algorithm": "sha",
+         "algorithm": "md5",
          "header": "Want-Repr-Digest"
        }
      ]
    }
 
-       Figure 4: Response indicating the problem and advertising the
-                            supported algorithms
+                 Figure 4: Response indicating the problem
 
 3.2.  Invalid Digest Values
 
@@ -401,7 +408,8 @@ Table of Contents
 
 4.  Security Considerations
 
-   All security considerations from Section 6 of [DIGEST] apply as well.
+   All security considerations from Section 6 of [DIGEST] and Section 7
+   of [UNENC-DIGEST] apply as well.
 
    Disclosing error details could leak information such as the presence
    of intermediaries or the server's implementation details.  Moreover,
@@ -492,6 +500,13 @@ Table of Contents
               Nottingham, M. and P. Kamp, "Structured Field Values for
               HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
               <https://www.rfc-editor.org/rfc/rfc9651>.
+
+   [UNENC-DIGEST]
+              Pardue, L. and M. West, "HTTP Unencoded Digest", Work in
+              Progress, Internet-Draft, draft-ietf-httpbis-unencoded-
+              digest-03, 12 December 2025,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
+              unencoded-digest-03>.
 
 Authors' Addresses
 
