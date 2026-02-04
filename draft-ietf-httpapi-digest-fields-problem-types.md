@@ -1,6 +1,6 @@
 ---
 title: "HTTP Problem Types for Digest Fields"
-category: info
+category: std
 
 docname: draft-ietf-httpapi-digest-fields-problem-types-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
