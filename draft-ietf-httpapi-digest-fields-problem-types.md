@@ -121,20 +121,20 @@ The response can include the corresponding integrity preference field to indicat
 
 This problem type is a hint to the client about algorithm support, which the client could use to retry the request with different, supported algorithms.
 
-Example:
+The following example shows a request with the content `{"title": "New Title"}` (plus LF). The digest fields use the MD5 algorithm, which is not supported by the server as the algorithm is deprecated.
 
 ~~~ http-message
 POST /books HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept: application/json
-Repr-Digest: md5=:A1CFwRiuZWS0No0SWTUNuQ==:
-Content-Digest: md5=:A1CFwRiuZWS0No0SWTUNuQ==:
-Unencoded-Digest: md5=:A1CFwRiuZWS0No0SWTUNuQ==:
+Repr-Digest: md5=:Uwq9xB4MJtDTknVOSEE1WA==:
+Content-Digest: md5=:Uwq9xB4MJtDTknVOSEE1WA==:
+Unencoded-Digest: md5=:Uwq9xB4MJtDTknVOSEE1WA==:
 
 {"title": "New Title"}
 ~~~
-{: title="A request with md5 integrity fields, which are not supported by the server as the algorithm is deprecated"}
+{: title="A request with md5 integrity fields, which are not supported by the server"}
 
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
@@ -175,7 +175,7 @@ Host: foo.example
 Want-Repr-Digest: md5=10
 
 ~~~
-{: title="A request with a md5 integrity preference field, which is not supported by the server as the algorithm is deprecated"}
+{: title="A request with a md5 integrity preference field, which is not supported by the server"}
 
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
