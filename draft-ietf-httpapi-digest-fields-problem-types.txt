@@ -5,10 +5,10 @@
 Building Blocks for HTTP APIs                                  M. Kleidl
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                               L. Pardue
-Expires: 9 August 2026                                        Cloudflare
+Expires: 10 August 2026                                       Cloudflare
                                                                 R. Polli
                                                                  Par-Tec
-                                                         5 February 2026
+                                                         6 February 2026
 
 
                   HTTP Problem Types for Digest Fields
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 August 2026.
+   This Internet-Draft will expire on 10 August 2026.
 
 Copyright Notice
 
@@ -116,7 +116,7 @@ Table of Contents
      "type": "https://iana.org/assignments/http-problem-types#\
        digest-unsupported-algorithms",
      "title": "Unsupported hashing algorithms",
-     "unsupported-algorithms": [
+     "unsupported_algorithms": [
        {
          "algorithm": "foo",
          "header": "Want-Content-Digest"
@@ -175,7 +175,7 @@ Table of Contents
    the hashing algorithms referenced in the integrity or integrity
    preference fields present in the request are not supported.
 
-   For this problem type, the unsupported-algorithms extension member is
+   For this problem type, the unsupported_algorithms extension member is
    defined, whose value is a JSON [JSON] array of entries identifying
    each unsupported algorithm.  Each entry in the array is a JSON object
    with the following members:
@@ -223,7 +223,7 @@ Table of Contents
      "type": "https://iana.org/assignments/http-problem-types#\
        digest-unsupported-algorithms",
      "title": "Unsupported hashing algorithms",
-     "unsupported-algorithms": [
+     "unsupported_algorithms": [
        {
          "algorithm": "md5",
          "header": "Repr-Digest"
@@ -262,7 +262,7 @@ Table of Contents
      "type": "https://iana.org/assignments/http-problem-types#\
        digest-unsupported-algorithms",
      "title": "Unsupported hashing algorithms",
-     "unsupported-algorithms": [
+     "unsupported_algorithms": [
        {
          "algorithm": "md5",
          "header": "Want-Repr-Digest"
@@ -285,7 +285,7 @@ Table of Contents
    the integrity fields according to Section 4.5 of [STRUCTURED-FIELDS],
    for example because of a syntax error in the field value.
 
-   For this problem type, the invalid-digests extension member is
+   For this problem type, the invalid_digests extension member is
    defined, whose value is a JSON [JSON] array of entries identifying
    each invalid digest.  Each entry in the array is a JSON object with
    the following members:
@@ -326,7 +326,7 @@ Table of Contents
      "type": "https://iana.org/assignments/http-problem-types#\
        digest-invalid-values",
      "title": "Invalid digest values",
-     "invalid-digests": [
+     "invalid_digests": [
        {
          "algorithm": "sha-512",
          "header": "Repr-Digest",
@@ -345,7 +345,7 @@ Table of Contents
    include a digest value that does not match the digest value that the
    server calculated for the request content or representation.
 
-   For this problem type, the mismatched-digests extension member is
+   For this problem type, the mismatched_digests extension member is
    defined, whose value is a JSON [JSON] array of entries identifying
    each mismatched digest.  Each entry in the array is a JSON object
    with the following members:
@@ -353,7 +353,7 @@ Table of Contents
    *  The algorithm member is a JSON string containing the algorithm key
       of the hashing algorithm.
 
-   *  The provided-digest member is a JSON string containing the digest
+   *  The provided_digest member is a JSON string containing the digest
       value taken from the request's integrity fields.  The digest value
       is serialized as a byte sequence as described in Section 4.1.8 of
       [STRUCTURED-FIELDS].
@@ -394,10 +394,10 @@ Table of Contents
      "type": "https://iana.org/assignments/http-problem-types#\
        digest-mismatched-values",
      "title": "Mismatched digest values",
-     "mismatched-digests": [
+     "mismatched_digests": [
        {
          "algorithm": "sha-256",
-         "provided-digest": \
+         "provided_digest": \
            ":RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:",
          "header": "Repr-Digest"
        }
