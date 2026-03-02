@@ -299,7 +299,7 @@ Disclosing error details could leak information
 such as the presence of intermediaries or the server's implementation details.
 Moreover, they can be used to fingerprint the server.
 
-To mitigate these risks, server operators could assess the risk of disclosing error details
+To mitigate these risks, server operators are recommended to assess the risk of disclosing error details
 and prefer a general problem type over a more specific one.
 
 There is no method defined for the server to communicate a digest value that it
