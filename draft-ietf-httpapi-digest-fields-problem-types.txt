@@ -5,10 +5,10 @@
 Building Blocks for HTTP APIs                                  M. Kleidl
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                               L. Pardue
-Expires: 13 August 2026                                       Cloudflare
+Expires: 3 September 2026                                     Cloudflare
                                                                 R. Polli
                                                                  Par-Tec
-                                                         9 February 2026
+                                                            2 March 2026
 
 
                   HTTP Problem Types for Digest Fields
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 August 2026.
+   This Internet-Draft will expire on 3 September 2026.
 
 Copyright Notice
 
@@ -402,8 +402,8 @@ Table of Contents
 
 4.  Security Considerations
 
-   All security considerations from Section 6 of [DIGEST] and Section 7
-   of [UNENC-DIGEST] apply as well.
+   All security considerations from Section 5 of [PROBLEM], Section 6 of
+   [DIGEST], and Section 7 of [UNENC-DIGEST] apply as well.
 
    Disclosing error details could leak information such as the presence
    of intermediaries or the server's implementation details.  Moreover,
@@ -489,9 +489,9 @@ Table of Contents
    [UNENC-DIGEST]
               Pardue, L. and M. West, "HTTP Unencoded Digest", Work in
               Progress, Internet-Draft, draft-ietf-httpbis-unencoded-
-              digest-03, 12 December 2025,
+              digest-04, 2 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              unencoded-digest-03>.
+              unencoded-digest-04>.
 
 Authors' Addresses
 
