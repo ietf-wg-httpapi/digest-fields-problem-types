@@ -102,6 +102,8 @@ The following section defines three problem types to express common problems tha
 
 Requests can include multiple integrity or integrity preference fields. For example, they may use the `Content-Digest` and `Repr-Digest` fields simultaneously or express preferences for content and representation digests at the same time. Therefore, similar problems can appear multiple times for one request. The problem types defined in this document allow expressing multiple appearances, while each time identifying the corresponding header that contained the problematic value.
 
+Generally, clients that consume problem details cannot rely on the presence of any problem type field; see {{Section 3.1 of PROBLEM}}. The problem types in this document define extension members ({{Section 3.2 of PROBLEM}}) that are optional for servers to populate and send. While populating all extension members can improve the usefulness of the problem type response, omission of any extension member defined in this document has no special meaning.
+
 ## Unsupported Hashing Algorithms
 
 This section defines the "https://iana.org/assignments/http-problem-types#digest-unsupported-algorithms" problem type.
