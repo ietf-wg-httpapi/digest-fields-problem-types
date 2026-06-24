@@ -5,10 +5,10 @@
 Building Blocks for HTTP APIs                                  M. Kleidl
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                               L. Pardue
-Expires: 3 September 2026                                     Cloudflare
+Expires: 26 December 2026                                     Cloudflare
                                                                 R. Polli
                                                                  Par-Tec
-                                                            2 March 2026
+                                                            24 June 2026
 
 
                   HTTP Problem Types for Digest Fields
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 September 2026.
+   This Internet-Draft will expire on 26 December 2026.
 
 Copyright Notice
 
@@ -160,6 +160,14 @@ Table of Contents
    in this document allow expressing multiple appearances, while each
    time identifying the corresponding header that contained the
    problematic value.
+
+   Generally, clients that consume problem details cannot rely on the
+   presence of any problem type field; see Section 3.1 of [PROBLEM].
+   The problem types in this document define extension members
+   (Section 3.2 of [PROBLEM]) that are optional for servers to populate
+   and send.  While populating all extension members can improve the
+   usefulness of the problem type response, omission of any extension
+   member defined in this document has no special meaning.
 
 3.1.  Unsupported Hashing Algorithms
 
@@ -489,9 +497,9 @@ Table of Contents
    [UNENC-DIGEST]
               Pardue, L. and M. West, "HTTP Unencoded Digest", Work in
               Progress, Internet-Draft, draft-ietf-httpbis-unencoded-
-              digest-04, 2 March 2026,
+              digest-05, 17 June 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              unencoded-digest-04>.
+              unencoded-digest-05>.
 
 Authors' Addresses
 
